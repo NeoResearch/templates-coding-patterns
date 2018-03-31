@@ -20,25 +20,55 @@ namespace NeoFrame
         }
 
         // checks if no assets are being sent with the message (testing only NEO asset for now)
-        public static bool isNonPayable()
+        public static bool NonPayable()
         {
-            return false;
+            Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+            return tx.GetReferences().Length == 0;
         }
 
-        // returns the script hash of the invoking element
+        // returns the script hash in the invoking message
         public static byte[] MessageSender()
         {
-                        Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
-            return tx.GetAttributes()[0].Data;
+            if(NonPayable())
+                return MessageSenderNonPayable();
+            else {
+                Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+                return tx.GetReferences()[0].ScriptHash;
+            }
         }
 
-        // returns the script hash of the invoking element in a NonPayable function. Expects: Assert(isNonPayable())
+        // returns the value (of NEO) in the invoking message (multiplied by 10^8)
+        public static BigInteger MessageValue()
+        {
+            return MessageValueNeo();
+        }
+
+        // returns the value of NEO in the invoking message (multiplied by 10^8)
+        public static BigInteger MessageValueNeo()
+        {
+            if(NonPayable())
+                return 0;
+            else {
+                Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+                TransactionOutput[] outputs = tx.GetOutputs();
+                foreach (TransactionOutput output in outputs)
+                    if (output.ScriptHash == ExecutionEngine.ExecutingScriptHash && output.AssetId == NeoAssetId)
+                        return output.Value;
+                return 0;
+            }
+        }
+
+        // returns the script hash of the invoking element in a NonPayable function. Expects: Assert(NonPayable())
         public static byte[] MessageSenderNonPayable()
         {
             Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
             return tx.GetAttributes()[0].Data;
         }
 
+        // returns the script hash of this contract
+        public static byte[] ThisContractHash()
+        {
+            return ExecutionEngine.ExecutingScriptHash;
+        }
     }
-
 }
