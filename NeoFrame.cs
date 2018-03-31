@@ -11,6 +11,7 @@ namespace NeoFrame
     {
         // NEO asset id. the hash is in reversed order, for use in internal functions.
         private static readonly byte[] NeoAssetId = { 155, 124, 255, 218, 166, 116, 190, 174, 15, 147, 14, 190, 96, 133, 175, 144, 147, 229, 254, 86, 179, 74, 92, 34, 12, 205, 207, 110, 252, 51, 111, 197 };
+        private static readonly byte[] GasAssetId = { 231, 45, 40, 105, 121, 238, 108, 177, 183, 230, 93, 253, 223, 178, 227, 132, 16, 11, 141, 20, 142, 119, 88, 222, 66, 228, 22, 139, 113, 121, 44, 96 };
 
         // tests if boolean is true, otherwise throws exception (ExecutionEngine will FAIL)
         public static void Assert(bool b)
