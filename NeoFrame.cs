@@ -65,6 +65,34 @@ namespace NeoFrame
             return tx.GetAttributes()[0].Data;
         }
 
+        // returns the balance (of NEO) before the invoking message (multiplied by 10^8)
+        public static BigInteger SenderBalanceBefore()
+        {
+            if(NonPayable())
+                return -1;
+            else {
+                Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+                TransactionOutput[] refs = tx.GetReferences();
+                return refs[0].Value;
+            }
+        }
+
+        // returns the balance (of NEO) after the invoking message (multiplied by 10^8)
+        public static BigInteger SenderBalanceAfter()
+        {
+            if(NonPayable())
+                return -1;
+            else {
+                Transaction tx = (Transaction)ExecutionEngine.ScriptContainer;
+                TransactionOutput[] outputs = tx.GetOutputs();
+                byte[] address = MessageSender();
+                foreach (TransactionOutput output in outputs)
+                    if (output.ScriptHash == address && output.AssetId == NeoAssetId)
+                        return output.Value;
+                return 0;
+            }
+        }
+
         // returns the script hash of this contract
         public static byte[] ThisContractHash()
         {

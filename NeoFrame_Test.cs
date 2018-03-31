@@ -10,6 +10,10 @@ namespace Neo.SmartContract
             Runtime.Notify(NeoFrame.Utils.MessageValue());
             Runtime.Notify("Contract:");
             Runtime.Notify(NeoFrame.Utils.ThisContractHash());
+            Runtime.Notify("Sender Balance Before:");
+            Runtime.Notify(NeoFrame.Utils.SenderBalanceBefore());
+            Runtime.Notify("Sender Balance After:");
+            Runtime.Notify(NeoFrame.Utils.SenderBalanceAfter());
         }
     }
 }
